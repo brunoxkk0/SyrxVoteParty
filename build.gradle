@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+group 'br.com.syrxcraft'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/groups/public/'
+    }
+
+    maven {
+        name = 'nuvotifier-repo'
+        url = 'https://dl.bintray.com/nuvotifier/maven/'
+    }
+}
+
+dependencies {
+    compile 'org.bukkit:bukkit:1.13.2-R0.1-SNAPSHOT'
+    compileOnly "com.vexsoftware:nuvotifier-universal:2.3.4"
+}
