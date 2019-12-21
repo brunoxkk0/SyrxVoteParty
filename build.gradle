@@ -1,16 +1,69 @@
-plugins {
-    id 'org.spongepowered.plugin' version '0.9.0'
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
+        classpath "gradle.plugin.org.spongepowered:spongegradle:0.9.0"
+    }
 }
+
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: "org.spongepowered.plugin"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+archivesBaseName = 'SyrxVoteParty'
 
 group = pluginGroup
 version = pluginVersion
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+repositories {
+    mavenCentral()
+    maven {
+        name 'JitPack'
+        url 'https://jitpack.io'
+    }
+}
 
 dependencies {
     compileOnly 'org.spongepowered:spongeapi:7.1.0'
     annotationProcessor 'org.spongepowered:spongeapi:7.1.0'
+    compile fileTree(dir:"libs", include:"*.jar")
+    compile 'com.github.Carleslc:Simple-YAML:1.4.1'
+    compile 'com.google.guava:guava:27.0.1-jre'
+    compile 'org.yaml:snakeyaml:1.18'
+    compile ("com.github.NuVotifier.NuVotifier:nuvotifier-sponge:2.5.3")
+}
+
+shadowJar {
+    relocate 'com.vexsoftware.votifier', 'spongelibs.com.vexsoftware.votifier'
+    relocate 'com.google', 'spongelibs.com.google'
+    relocate 'com.minemarket.api', 'spongelibs.com.minemarket.api'
+    relocate 'org.simpleyaml', 'spongelibs.org.simpleyaml'
+    relocate 'org.yaml.snakeyaml', 'spongelibs.org.yaml.snakeyaml'
+    relocate 'org.checkerframework','spongelibs.org.checkerframework'
+
+
+    dependencies {
+        exclude(dependency('org.spongepowered:spongeapi:7.1.0-SNAPSHOT'))
+    }
+
+    minimize()
+}
+
+artifacts {
+    archives shadowJar
+    shadow shadowJar
 }
 
 sponge.plugin.id = pluginId
