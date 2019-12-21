@@ -3,30 +3,19 @@ package br.com.brunoxkk0.syrxvoteparty;
 import br.com.brunoxkk0.syrxvoteparty.core.BarHandlerThread;
 import br.com.brunoxkk0.syrxvoteparty.core.VoteHandler;
 import com.google.inject.Inject;
-import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.sponge.event.VotifierEvent;
-import org.simpleyaml.configuration.Configuration;
 import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.EventContext;
-import org.spongepowered.api.event.cause.EventContextKeys;
-import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
-import org.spongepowered.api.event.game.state.GameStoppedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
-import org.spongepowered.api.event.message.MessageChannelEvent;
-import org.spongepowered.api.event.message.MessageEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.text.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,24 +68,30 @@ public class SyrxVoteParty {
     public void onServerStart(GameStartedServerEvent event) {
         instance = this;
 
+        logger.info("[SyrxVoteParty] Carregando eventos.");
+
         logger.info("[SyrxVoteParty] Carregando VoteHandler.");
         handler = new VoteHandler();
-        VoteHandler.setup();
+        handler.setup();
 
         logger.info("[SyrxVoteParty] Carregando BarHandlerThread.");
         barHandlerThread = new BarHandlerThread();
-        BarHandlerThread.setup();
+        barHandlerThread.setup();
 
-        logger.info("[SyrxVoteParty] Carregando eventos.");
-        Sponge.getEventManager().registerListeners(getContainer(), handler);
+    }
 
+    @Listener
+    public void onVote(VotifierEvent event){
+        handler.onVote(event);
     }
 
     @Listener
     public void onServerStop(GameStoppingServerEvent event){
         logger.info("[SyrxVoteParty] Desligando sistemas e salvando dados...");
-        VoteHandler.save();
-        if(!BarHandlerThread.getWarn().isInterrupted()) BarHandlerThread.getWarn().interrupt();
+        handler.save();
+
+        if(!barHandlerThread.getWarn().isInterrupted()) barHandlerThread.getWarn().interrupt();
+
     }
 
     public Logger getLogger() {

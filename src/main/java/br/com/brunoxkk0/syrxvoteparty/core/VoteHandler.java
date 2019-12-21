@@ -18,7 +18,7 @@ public class VoteHandler {
     private static List<String> rewardCommands;
     private static String rewardMessage;
 
-    public static void setup(){
+    public void setup(){
 
         currentVoteCount =  SyrxVoteParty.getConfig().getInt("votes_current");
         requiredVotesCount = SyrxVoteParty.getConfig().getInt("votes_required");
@@ -34,7 +34,7 @@ public class VoteHandler {
         return Math.min(100F, Math.max((currentVoteCount * 100 / requiredVotesCount),0F));
     }
 
-    public void process(Player player){
+    public synchronized void process(Player player){
 
         currentVoteCount++;
 
@@ -66,7 +66,7 @@ public class VoteHandler {
 
     }
 
-    public static void save(){
+    public void save(){
         SyrxVoteParty.getConfig().set("votes_current",currentVoteCount);
 
         try {
@@ -89,8 +89,8 @@ public class VoteHandler {
         return (requiredVotesCount - currentVoteCount);
     }
 
-    @Listener
-    public void onVote(VotifierEvent event){
+
+    public synchronized void onVote(VotifierEvent event){
         Player player = null;
 
         if(Sponge.getServer().getPlayer(event.getVote().getUsername()).isPresent()){

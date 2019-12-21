@@ -17,11 +17,11 @@ public class BarHandlerThread {
     private static CounterType counterType;
     private static int bar_warn_timer;
 
-    public static Thread getWarn() {
+    public Thread getWarn() {
         return warn;
     }
 
-    public static void setup(){
+    public void setup(){
 
         barMessage = SyrxVoteParty.getConfig().getString("bar_format");
         loadColor(SyrxVoteParty.getConfig().getString("bar_color"));
@@ -46,7 +46,7 @@ public class BarHandlerThread {
                 } catch (InterruptedException ignored) { }
 
                 try {
-                    VoteHandler.save();
+                    SyrxVoteParty.getHandler().save();
                     SyrxVoteParty.getInstance().getLogger().info("[SyrxVoteParty] Votos salvos com sucesso.");
                 }catch (Exception e){
                     SyrxVoteParty.getInstance().getLogger().info("[SyrxVoteParty] Falha ao salvar os votos.");

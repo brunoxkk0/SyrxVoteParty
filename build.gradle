@@ -38,17 +38,15 @@ repositories {
 dependencies {
     compileOnly 'org.spongepowered:spongeapi:7.1.0'
     annotationProcessor 'org.spongepowered:spongeapi:7.1.0'
-    compile fileTree(dir:"libs", include:"*.jar")
     compile 'com.github.Carleslc:Simple-YAML:1.4.1'
     compile 'com.google.guava:guava:27.0.1-jre'
     compile 'org.yaml:snakeyaml:1.18'
-    compile ("com.github.NuVotifier.NuVotifier:nuvotifier-sponge:2.5.3")
+    compileOnly ("com.github.NuVotifier.NuVotifier:nuvotifier-sponge:2.5.3")
 }
 
 shadowJar {
-    relocate 'com.vexsoftware.votifier', 'spongelibs.com.vexsoftware.votifier'
+    //relocate 'com.vexsoftware.votifier', 'spongelibs.com.vexsoftware.votifier'
     relocate 'com.google', 'spongelibs.com.google'
-    relocate 'com.minemarket.api', 'spongelibs.com.minemarket.api'
     relocate 'org.simpleyaml', 'spongelibs.org.simpleyaml'
     relocate 'org.yaml.snakeyaml', 'spongelibs.org.yaml.snakeyaml'
     relocate 'org.checkerframework','spongelibs.org.checkerframework'
