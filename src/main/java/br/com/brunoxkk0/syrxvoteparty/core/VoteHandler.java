@@ -5,11 +5,14 @@ import com.vexsoftware.votifier.sponge.event.VotifierEvent;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.sound.SoundTypes;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class VoteHandler {
 
@@ -48,7 +51,9 @@ public class VoteHandler {
 
         }
 
-        SyrxVoteParty.getBarHandlerThread().processBar(player);
+        if(player != null){
+            SyrxVoteParty.getBarHandlerThread().processBar(player);
+        }
     }
 
 
@@ -91,18 +96,20 @@ public class VoteHandler {
 
 
     public synchronized void onVote(VotifierEvent event){
-        Player player = null;
 
-        if(Sponge.getServer().getPlayer(event.getVote().getUsername()).isPresent()){
-            player = Sponge.getServer().getPlayer(event.getVote().getUsername()).get();
-        }
+        Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
 
-        if(player == null | (player != null && !player.hasPlayedBefore())){
-            SyrxVoteParty.getInstance().getLogger().info("[SyrxVoteParty] The player " + event.getVote().getUsername() + " is null or never have played before. Vote ignored.");
+        if(!userStorage.get().get(event.getVote().getUsername()).isPresent()){
+            SyrxVoteParty.getInstance().getLogger().info("[SyrxVoteParty] O jogador " + event.getVote().getUsername() + " nunca jogou no servidor antes.");
             return;
         }
 
-        process(player);
+        if(userStorage.get().get(event.getVote().getUsername()).get().getPlayer().isPresent()){
+            process(userStorage.get().get(event.getVote().getUsername()).get().getPlayer().get());
+            return;
+        }
+
+        SyrxVoteParty.getInstance().getLogger().info("[SyrxVoteParty] O jogador " + event.getVote().getUsername() + " votou no servidor. mais estava offline.");
 
     }
 

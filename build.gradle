@@ -38,12 +38,10 @@ repositories {
 dependencies {
     compileOnly 'org.spongepowered:spongeapi:7.1.0'
     annotationProcessor 'org.spongepowered:spongeapi:7.1.0'
-    compile 'com.github.Carleslc:Simple-YAML:1.4.1'
-    compile 'com.google.guava:guava:27.0.1-jre'
-    compile 'org.yaml:snakeyaml:1.18'
-    compileOnly ("com.github.NuVotifier.NuVotifier:nuvotifier-sponge:2.5.3")
+    compileOnly fileTree(dir: 'libs', include: '*.jar')
 }
 
+/*
 shadowJar {
     //relocate 'com.vexsoftware.votifier', 'spongelibs.com.vexsoftware.votifier'
     relocate 'com.google', 'spongelibs.com.google'
@@ -59,9 +57,11 @@ shadowJar {
     minimize()
 }
 
+
 artifacts {
     archives shadowJar
     shadow shadowJar
 }
+*/
 
 sponge.plugin.id = pluginId
